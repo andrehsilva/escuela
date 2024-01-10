@@ -1,0 +1,19 @@
+{% extends '_base.html' %} {# herda tudo que já tem em _base.html #}
+{% load static %}  {# carrega o módulo static para fornecer arquivos estáticos #}
+
+{% block head_title %}
+    Tenant School
+{% endblock %}
+
+
+
+{% block main %}
+<body class="bg-light">
+    <h3 class="mt-5">
+        Painel Escolar -  
+        <small class="text-muted">Administrador Geral</small>
+    </h3>
+   
+ 
+{% endblock %}
+    
