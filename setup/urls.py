@@ -6,8 +6,5 @@ from django.urls import path, include ## adicionar include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('tenant.urls')),
+    path('', include('school.urls')),
 ]
-
-
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) # Adicionar Isto
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # Adicionar Isto

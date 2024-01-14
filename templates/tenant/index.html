@@ -1,0 +1,139 @@
+{% extends '_base.html' %} {# herda tudo que já tem em _base.html #}
+{% load static %}  {# carrega o módulo static para fornecer arquivos estáticos #}
+
+{% block head_title %}
+    Tenant School
+{% endblock %}
+
+
+
+{% block main %}
+<body class="bg-light">
+    <h3 class="mt-5">
+        Painel Escolar -  
+        <small class="text-muted">Administrador Geral</small>
+    </h3>
+    <div class="container mt-5 p-5 rounded shadow bg-white">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="d-flex mb-3 justify-content-between align-items-center">
+            <a href="" data-bs-toggle="modal" data-bs-target="#addnewtenantModal" class="btn btn-primary px-3 btn-sm"<i class="bi bi-plus-circle"></i>Adicionar grupo escolar + </a>
+            <div class="">
+                <form method="post" class="d-flex">
+                    {% csrf_token %}
+                    <input type="search" name="query" class="form-control" placeholder="procurar..." value="{{search_query}}">
+                    <button class="btn btn-success btn-sm px-3 mx-2" name="search">Procurar</button>
+                </form>
+            </div>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Grupo escolar</th>
+                    <th scope="col">E-mail escolar</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tenant in tenants %}
+                    <tr>
+                        <th>{{tenant.id}}</th>
+                        <td>{{tenant.name}}</td>
+                        <td>{{tenant.email}}</td>
+                        <td>
+                            <a href="" data-bs-toggle="modal" data-bs-target="#updatetenantModal_{{tenant.id}}" class="btn btn-sm btn-success"><i class="fa-regular fa-pen-to-square"></i>Editar</a>
+                            <a href="" data-bs-toggle="modal" data-bs-target="#deletetenantModal_{{tenant.id}}" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i>Excluir</a>
+                        </td>
+                    </tr>
+                    <!-- update tenant modal -->
+                    <div class="modal fade" id="updatetenantModal_{{tenant.id}}" tabindex="-1" aria-labelledby="updatetenantModal_{{tenant.id}}Label" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="updatetenantModal_{{tenant.id}}Label">Atualizar grupo escolar</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="hidden" name="id" value="{{tenant.id}}">
+                                        <div class="">
+                                            <label for="name">Grupo escolar</label>
+                                            <input required type="text" value="{{tenant.name}}" name="name" class="form-control">
+                                        </div>
+                                        <div class="mt-3">
+                                            <label for="email">Email escolar</label>
+                                            <input required type="email" value="{{tenant.email}}" name="email" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary" name="update">Atualizar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- delete tenant modal -->
+                    <div class="modal fade" id="deletetenantModal_{{tenant.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deletetenantModal_{{tenant.id}}Label" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{tenant.id}}">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <p>Você tem certeza que deseja excluir o grupo: <b>{{tenant.name}}</b> ? </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-danger" name="delete">Excluir</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- add new tenant modal -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="addnewtenantModal" tabindex="-1" aria-labelledby="addnewtenantModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addnewtenantModalLabel">Adicionar grupo escolar</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="">
+                            <label for="name">Grupo escolar</label>
+                            <input required type="text" name="name" class="form-control">
+                        </div>
+                        <div class="mt-3">
+                            <label for="email">E-mail escolar</label>
+                            <input required type="email" name="email" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" name="create">Criar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endblock %}
+    
