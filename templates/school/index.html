@@ -25,7 +25,7 @@
     
     <div class="d-flex mb-3 justify-content-between align-items-center">
         
-        <a href="" data-bs-toggle="modal" data-bs-target="#addnewschoolModal" class="btn btn-primary px-3 btn-sm">Cadastrar escola</a>
+        <a href="" data-bs-toggle="modal" data-bs-target="#addnewschoolModal" class="btn btn-primary px-3 btn-sm">Cadastrar escola <i class="bi bi-plus-circle"></i></a>
         <div class="">
             <form method="post" class="d-flex">
                 {% csrf_token %}
@@ -50,7 +50,9 @@
             {% for school in schools %}
                 <tr>
                     <th>{{school.id}}</th>
-                    <td>{{school.tenant.name}}</td>
+                    {% for tenant in school.tenant.name_set.all %}
+                    <td>{{ tenant.title }}</td>
+                    {% endfor %}
                     <td>{{school.name}}</td>
                     <td>{{school.cnpj}}</td>
                     <td>{{school.namesocial}}</td>
@@ -67,7 +69,7 @@
                             {% csrf_token %}
                             <div class="modal-content">
                                 <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="updateschoolModal_{{school.id}}Label">Atualizar grupo escolar</h1>
+                                <h1 class="modal-title fs-5" id="updateschoolModal_{{school.id}}Label">Atualizar escola</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
@@ -75,9 +77,9 @@
                                     <div class="">
 
 
-                                        <label class="mt-3" for="school">Selecione o inquilino:</label>
+                                        <label class="mt-3" for="school">Selecione o grupo escolar:</label>
                                         <select name="school" class="form-control">
-                                            <option value="">-- Sem Inquilino --</option>  <!-- Linha sem valor -->
+                                            <option value="">-- Sem grupo escolar --</option>  <!-- Linha sem valor -->
                                             {% for tenant in tenants %}
                                                 <option value="{{ tenant.id }}" {% if tenant.id == tenant.id %} selected {% endif %}>{{ tenant.name }}</option>
                                             {% endfor %}
@@ -147,16 +149,16 @@
             {% csrf_token %}
             <div class="modal-content">
                 <div class="modal-header">
-                <h1 class="modal-title fs-5" id="addnewschoolModalLabel">Adicionar grupo escolar</h1>
+                <h1 class="modal-title fs-5" id="addnewschoolModalLabel">Criar escola</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="">
-                        <label class="mt-3" for="school">Selecione o inquilino:</label>
+                        <label class="mt-3" for="school">Selecione o grupo escolar:</label>
                         <select name="school" class="form-control">
-                            <option value="">-- Sem Inquilino --</option>  <!-- Linha sem valor -->
-                            {% for school in schools %}
-                                <option value="{{ school.id }}">{{ school.name }}</option>
+                            <option value="">-- Sem grupo escolar --</option>  <!-- Linha sem valor -->
+                            {% for tenant in tenants %}
+                                <option value="{{ tenant.id.id }}">{{ tenant.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
