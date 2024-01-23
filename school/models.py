@@ -15,7 +15,6 @@ class School(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     activated = models.BooleanField(default=True)
     hash_value = models.CharField(max_length=16, blank=True, null=True, unique=True)
-    # Relacionamento com Tenant
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name='schools')
 
 @receiver(pre_save, sender=School)
