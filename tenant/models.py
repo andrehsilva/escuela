@@ -18,5 +18,5 @@ def generate_tenant_hash(sender, instance, **kwargs):
         hash_result = hashlib.md5(hash_input).hexdigest()[:16]
         instance.hash_value_tenant = hash_result
 
-    def __str__(self):
-        return str(self.name)
+def __str__(self):
+    return str(self.name)
