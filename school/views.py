@@ -51,3 +51,63 @@ class SchoolView(View):
                 # Captura a exceção de violação de unicidade e trata de acordo
                 messages.error(request, "Já existe uma escola com esses dados.")
                 return redirect('school')  # Ou redirecione para onde for necessário
+        
+        elif "update" in request.POST:
+        # Obtenha os dados da escola a ser atualizada
+            school_id = request.POST.get("id")  # Supondo que você tenha um campo oculto com o ID da escola
+            name = request.POST.get("name")
+            namesocial = request.POST.get("namesocial")
+            cnpj = request.POST.get("cnpj")
+            namefantasy = request.POST.get("namefantasy")
+            description = request.POST.get("description")
+            tenant_id = request.POST.get("school")
+
+            try:
+                # Tente obter a escola existente pelo ID
+                existing_school = get_object_or_404(School, id=school_id)
+
+                # Atualize os campos necessários
+                existing_school.name = name
+                existing_school.namesocial = namesocial
+                existing_school.cnpj = cnpj
+                existing_school.namefantasy = namefantasy
+                existing_school.description = description
+                existing_school.tenant_id = tenant_id
+
+                print("ID:", existing_school.id)
+                print("Name:", name)
+                print("Tenant ID:", tenant_id)
+
+                # Salve a instância atualizada
+                existing_school.save()
+
+                messages.success(request, "Escola atualizada com sucesso!")
+                return redirect('school')
+
+            except School.DoesNotExist:
+                messages.error(request, "Escola não encontrada.")
+                return redirect('school')  # Ou redirecione para onde for necessário
+            
+        elif "delete" in request.POST:
+            school_id = request.POST.get("id")  # Supondo que você tenha um campo oculto com o ID da escola
+
+            try:
+                # Tente obter a escola existente pelo ID
+                existing_school = get_object_or_404(School, id=school_id)
+
+                # Exclua a instância
+                existing_school.delete()
+
+                messages.success(request, "Escola excluída com sucesso!")
+                return redirect('school')
+
+            except School.DoesNotExist:
+                messages.error(request, "Escola não encontrada.")
+                return redirect('school')  # Ou redirecione para onde for necessário
+        
+        elif "search" in request.POST:
+            search_query = request.POST.get("query")
+            schools = School.objects.filter(Q(name__icontains=search_query) | Q(description__icontains=search_query))
+
+        context = {"schools": schools, "search_query": search_query}
+        return render(request, self.template_name, context=context)
