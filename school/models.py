@@ -16,6 +16,9 @@ class School(models.Model):
     # Relacionamento com Tenant
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name='schools')
 
+    def __str__(self):
+        return self.name
+
 @receiver(pre_save, sender=School)
 def generate_hash(sender, instance, **kwargs):
     if not instance.hash_value:
